@@ -53,7 +53,7 @@ public class FeedEntry {
         return "name='" + name + '\n' +
                 ", artist='" + artist + '\n' +
                 ", releaseDate='" + releaseDate + '\n' +
-                ", summary='" + summary + '\n' +
                 ", imageURL='" + imageURL + '\n';
     }
+
 }

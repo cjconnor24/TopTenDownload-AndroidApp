@@ -25,7 +25,7 @@ public class ParseApplications {
     public boolean parse(String xmlData) {
 
         boolean status = true;
-        FeedEntry currentRecord;
+        FeedEntry currentRecord = null;
         boolean inEntry = false;
         String textValue = "";
 
@@ -72,6 +72,11 @@ public class ParseApplications {
                         // NOTHING ELSE TO DO
                 }
                 eventType = xpp.next();
+            }
+
+            for(FeedEntry app : applications){
+                Log.d(TAG, "**********************");
+                Log.d(TAG, app.toString());
             }
 
         } catch (Exception e) {
