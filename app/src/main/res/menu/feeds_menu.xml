@@ -11,6 +11,10 @@
     <item
         android:id="@+id/mnuSongs"
         android:title="Songs" />
+    <item
+        android:id="@+id/mnuRefresh"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="Refresh Feed" />
     <group
         android:id="@+id/mnuGrpLimit"
         android:checkableBehavior="single">
