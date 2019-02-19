@@ -20,25 +20,27 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    // CONSTS FOR LOGGING AND PASSING DATA TO BUNDLE
     private static final String TAG = "MainActivity";
+    public static final String STATE_URL = "feedUrl";
+    public static final String STATE_LIMIT = "feedLimit";
+
     private ListView listApps;
     private String feedUrl = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=%d/xml";
     private int feedLimit = 10;
     private String feedCacheUrl = "INVALIDATED";
-    public static final String STATE_URL = "feedUrl";
-    public static final String STATE_LIMIT = "feedLimit";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // GETS THE LIST VIEW FROM THE LAYOUT
         listApps = (ListView) findViewById(R.id.xmlListView);
 
-        // CHECK TO SEE IF DATA ALREADY SET
+        // CHECK TO SEE IF DATA ALREADY SET, IF SO PULL IT FROM THE BUNDLE
         if(savedInstanceState !=null){
             feedUrl = savedInstanceState.getString(STATE_URL);
             feedLimit = savedInstanceState.getInt(STATE_LIMIT);
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // CREATE TOP MENU
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.feeds_menu, menu);
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // ACTIONS FOR WHEN MENU ITEM SELECTED
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // SAVE THE DATA TO BUNDLE SO NOT LOST ON ORIENTATION CHANGE
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(STATE_URL, feedUrl);
@@ -103,8 +108,10 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    // DOWNLOAD THE XML DATA FROM THE PASSED URL
     private void downloadUrl(String feedUrl) {
 
+        // CHECK TO SEE IF URL IS ALREADY CACHED
         if (!feedUrl.equalsIgnoreCase(feedCacheUrl)) {
 
             Log.d(TAG, "downloadUrl: starting Async Task");
@@ -119,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // ASYNC CLASS TASK TO DOWNLOAD DATA ON SEPARATE THREAD
     private class DownloadData extends AsyncTask<String, Void, String> {
 
         private static final String TAG = "DownloadData";
@@ -128,11 +136,14 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(s);
 //            Log.d(TAG, "onPostExecute: paramater is " + s);
 
+            // GET THE XML DATA PARSED TO OBJECTS
             ParseApplications parseApplications = new ParseApplications();
             parseApplications.parse(s);
 
 //            ArrayAdapter<FeedEntry> arrayAdapter = new ArrayAdapter<>(MainActivity.this,R.layout.list_view,parseApplications.getApplications());
 //            listApps.setAdapter(arrayAdapter);
+
+            // CREATE AN INSTANCE OF THE NEW CUSTOM FEED ADAPTER AND SET THE SOURCE
             FeedAdapter feedAdapter = new FeedAdapter(MainActivity.this, R.layout.list_record, parseApplications.getApplications());
             listApps.setAdapter(feedAdapter);
 
@@ -148,6 +159,11 @@ public class MainActivity extends AppCompatActivity {
             return rssFeed;
         }
 
+        /**
+         * Open up the connection
+         * @param urlPath
+         * @return
+         */
         private String downloadXML(String urlPath) {
             StringBuilder xmlResult = new StringBuilder();
 
