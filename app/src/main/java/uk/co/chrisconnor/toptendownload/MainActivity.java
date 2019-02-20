@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         downloadUrl(String.format(feedUrl, feedLimit));
 
-
     }
 
     // CREATE TOP MENU
@@ -176,11 +175,15 @@ public class MainActivity extends AppCompatActivity {
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 int charsRead;
-                char[] inputBuffer = new char[500];
+                char[] inputBuffer = new char[500]; // CREATE A BUFFER
+
+                // START TO LOOP
                 while (true) {
+
+                    // ADD TO BUFFER
                     charsRead = reader.read(inputBuffer);
                     if (charsRead < 0) {
-                        break;
+                        break; // BREAK IF COMPLETE
                     }
                     if (charsRead > 0) {
                         xmlResult.append(String.copyValueOf(inputBuffer, 0, charsRead));
